@@ -20,7 +20,6 @@ public class Blackjack {
 
         // Set amount player is playing with
         int playerMoney = 200;
-
         Scanner userInput = new Scanner(System.in);
 
         // Game loops while player still has money
