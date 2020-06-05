@@ -1,5 +1,6 @@
 package com.blackjack;
 
+import java.awt.*;
 import java.util.Scanner;
 
 public class Blackjack {
@@ -28,13 +29,21 @@ public class Blackjack {
             System.out.print("You have $" + playerMoney + ", how much would you like to bet? ");
             int playerBet = userInput.nextInt();
             // if statement that will not allow player to bet unless they are betting in increments of $5
-            if (playerBet % 5 != 0) {
-                System.out.println("Sorry - you are only allowed to bet in $5 increments.");
+            try {
+                if (playerBet % 5 != 0) {
+                    throw new ArithmeticException("Sorry - you are only allowed to bet in $5 increments.");
+                }
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
                 continue;
             }
 
-            if (playerBet > playerMoney) {
-                System.out.println("You cannot bet more than you have. Please leave.");
+            try {
+                if (playerBet > playerMoney) {
+                    throw new ArithmeticException("You cannot bet more than you have. Please leave.");
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 break;
             }
 
@@ -77,9 +86,14 @@ public class Blackjack {
                         // Ask player if they want to hit or stand
                         System.out.print("Would you like to hit or stand? ");
                         hitOrStand = userInput.next();
+                        try {
+                            throw new ArithmeticException("Please enter 'hit' or 'stand' to continue playing");
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
 
                         // Player hits
-                        if (hitOrStand.charAt(0) == 'h' || hitOrStand.charAt(0) == 'H') {
+                        if (hitOrStand.equalsIgnoreCase("hit")) {
                             playerHand.draw(playingDeck);
                             System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                             System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
@@ -93,19 +107,23 @@ public class Blackjack {
                         }
 
                         // Player stands
-                        if (hitOrStand.charAt(0) == 's' || hitOrStand.charAt(0) == 'S') {
+                        if (hitOrStand.equalsIgnoreCase("stand")) {
                             break;
                         }
                     }
 
                     // player wants to double down
-                    if (answerdd.equals("yes")) {
+                    if (answerdd.equalsIgnoreCase("yes")|| answerdd.charAt(0) == 'y'
+                            || answerdd.charAt(0) == 'Y') {
                         if (playerBet * 2 > playerMoney) {
                             System.out.println("You do not have enough money to double down. However, you can continue " +
                                     "to play your hand.");
                             // Ask player if they want to hit or stand
-                            System.out.print("Would you like to hit or stand? ");
-                            hitOrStand = userInput.next();
+                            try {
+                                throw new ArithmeticException("Please enter 'hit' or 'stand' to continue playing");
+                            } catch (Exception e) {
+                                System.out.println(e.getMessage());
+                            }
 
                             // player can't double down but they still have the option to hit or stand
                             if (hitOrStand.charAt(0) == 'h' || hitOrStand.charAt(0) == 'H') {
