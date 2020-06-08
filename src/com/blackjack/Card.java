@@ -13,6 +13,9 @@ public class Card {
     public String toString() {
         String symbol = "Err";
         String cardValue = "Err";
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_RED = "\u001B[31m";
+        String ANSI_WHITE_BACKGROUND = "\u001B[47m";
         switch (value.toString()) {
             case "TWO":
                 cardValue = "2";
@@ -68,7 +71,12 @@ public class Card {
                 symbol = "\u2666";
                 break;
         }
-        return cardValue + symbol;
+        if (suit.toString().equals("HEART") || suit.toString().equals("DIAMOND")) {
+            return ANSI_WHITE_BACKGROUND + ANSI_RED + cardValue + symbol + ANSI_RESET;
+        }
+        else {
+            return ANSI_WHITE_BACKGROUND + cardValue + symbol + ANSI_RESET;
+        }
     }
 
     public Values getValue() {

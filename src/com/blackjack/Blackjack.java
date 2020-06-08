@@ -1,5 +1,6 @@
 package com.blackjack;
 
+import javax.sound.midi.SoundbankResource;
 import java.util.Scanner;
 
 public class Blackjack {
@@ -20,6 +21,10 @@ public class Blackjack {
     public static String hitOrStand = "";
     public static String splitHitOrStand = "";
     public static boolean doubleDown = false;
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
 
     public static void main(String[] args) {
 
@@ -74,6 +79,8 @@ public class Blackjack {
             // reset endRound and doubleDown to false before each round
             endRound = false;
             doubleDown = false;
+            answerdd = "";
+            answerSplit = "";
 
 //          ------------------------------------------------------------------------------------------------
 
@@ -123,7 +130,7 @@ public class Blackjack {
                         dontHitWarning(split);
                         // Bust if > 21
                         if (split.cardsValue() > 21) {
-                            System.out.println("Your hand went over 21. You busted!");
+                            System.out.println(ANSI_RED + "Your hand went over 21. You busted!" + ANSI_RESET);
                         }
                     }
                 }
@@ -146,7 +153,7 @@ public class Blackjack {
                         dontHitWarning(playerHand);
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
-                            System.out.println("Your hand went over 21. You busted!");
+                            System.out.println(ANSI_RED + "Your hand went over 21. You busted!" + ANSI_RESET);
                             break;
                         }
                     }
@@ -188,7 +195,7 @@ public class Blackjack {
                         dontHitWarning(playerHand);
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
-                            System.out.println("Your hand went over 21. You busted!");
+                            System.out.println(ANSI_RED + "Your hand went over 21. You busted!" + ANSI_RESET);
                             break;
                         }
                     }
@@ -215,7 +222,7 @@ public class Blackjack {
                             dontHitWarning(playerHand);
                             // Bust if > 21
                             if (playerHand.cardsValue() > 21) {
-                                System.out.println("Your hand went over 21. You busted!");
+                                System.out.println(ANSI_RED + "Your hand went over 21. You busted!" + ANSI_RESET);
                                 break;
                             }
                         }
@@ -235,7 +242,7 @@ public class Blackjack {
 
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
-                            System.out.println("Your hand went over 21. You busted!");
+                            System.out.println(ANSI_RED + "Your hand went over 21. You busted!" + ANSI_RESET);
                             break;
                         }
                     }
@@ -266,7 +273,7 @@ public class Blackjack {
 
         } while (playerMoney > 0);
 
-        System.out.println("Game Over... You are out of money.");
+        System.out.println(ANSI_RED + "Game Over... You are out of money." + ANSI_RESET);
     }
 
     // method that determines winner of the hand
@@ -274,7 +281,7 @@ public class Blackjack {
 
         // Adjust player balance if they busted
         if (hand.cardsValue() > 21) {
-            System.out.println("You busted! You lose $" + playerBet + ".");
+            System.out.println(ANSI_RED + "You busted! You lose $" + playerBet + "." + ANSI_RESET);
             playerMoney -= playerBet;
             endRound = true;
         }
@@ -286,19 +293,19 @@ public class Blackjack {
         }
 
         // Display Total Value for Dealer and Player
-        System.out.println("Dealer's Hand value: " + dealerHand.cardsValue() + "\nPlayer's Hand value: "
-                + hand.cardsValue());
+        System.out.println("Dealer's Hand value: " + dealerHand.cardsValue() + ". Player's Hand value: "
+                + hand.cardsValue() + ".");
 
         // Dealer busts if their cards are more than 21
         if ((dealerHand.cardsValue() > 21) && !endRound) {
-            System.out.println("Dealer busts! You win $" + playerBet + ".");
+            System.out.println(ANSI_GREEN + "Dealer busts! You win $" + playerBet + "." + ANSI_RESET);
             playerMoney += playerBet;
             endRound = true;
         }
 
         // Check if dealer beat the player
         if ((dealerHand.cardsValue() >= 17) && (dealerHand.cardsValue() > hand.cardsValue()) && !endRound) {
-            System.out.println("Dealer beats you! You lose $" + playerBet + ".");
+            System.out.println(ANSI_RED + "Dealer beats you! You lose $" + playerBet + "." + ANSI_RESET);
             playerMoney -= playerBet;
             endRound = true;
         }
@@ -311,17 +318,19 @@ public class Blackjack {
 
         // Determine the winner of the hand and recalculate the player's betting balance
         if ((hand.cardsValue() > dealerHand.cardsValue()) && !endRound) {
-            System.out.println("You win the hand! You win $" + playerBet + ".");
+            System.out.println(ANSI_GREEN + "You win the hand! You win $" + playerBet + "." + ANSI_RESET);
             playerMoney += playerBet;
         } else if (!endRound) {
-            System.out.println("You lose the hand! You lose $" + playerBet + ".");
+            System.out.println(ANSI_RED + "You lose the hand! You lose $" + playerBet + "." + ANSI_RESET);
             playerMoney -= playerBet;
         }
     }
 
     public static void dontHitWarning(Deck hand) {
         if (hand.cardsValue() == 21) {
-            System.out.println("You will lose if you hit again.");
+            hitOrStand = "stand";
+            splitHitOrStand = "stand";
+            System.out.println(ANSI_GREEN + "You have 21!" + ANSI_RESET);
         }
     }
 
