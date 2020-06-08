@@ -305,17 +305,17 @@ public class Blackjack {
         System.out.println("Dealer's Hand value: " + dealerHand.cardsValue() + "\nPlayer's Hand value: "
                 + hand.cardsValue());
 
-        // Check if dealer beat the player
-        if ((dealerHand.cardsValue() >= 17) && (dealerHand.cardsValue() > hand.cardsValue()) && !endRound) {
-            System.out.println("Dealer beats you! You lose $" + playerBet + ".");
-            playerMoney -= playerBet;
-            endRound = true;
-        }
-
         // Dealer busts if their cards are more than 21
         if ((dealerHand.cardsValue() > 21) && !endRound) {
             System.out.println("Dealer busts! You win $" + playerBet + ".");
             playerMoney += playerBet;
+            endRound = true;
+        }
+
+        // Check if dealer beat the player
+        if ((dealerHand.cardsValue() >= 17) && (dealerHand.cardsValue() > hand.cardsValue()) && !endRound) {
+            System.out.println("Dealer beats you! You lose $" + playerBet + ".");
+            playerMoney -= playerBet;
             endRound = true;
         }
 
