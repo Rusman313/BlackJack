@@ -93,16 +93,39 @@ public class Deck {
         // Get the value of every card in the deck
         for (Card card : this.deck) {
             switch (card.getValue()) {
-                case TWO -> total += 2;
-                case THREE -> total += 3;
-                case FOUR -> total += 4;
-                case FIVE -> total += 5;
-                case SIX -> total += 6;
-                case SEVEN -> total += 7;
-                case EIGHT -> total += 8;
-                case NINE -> total += 9;
-                case TEN, JACK, QUEEN, KING -> total += 10;
-                case ACE -> aces += 1;
+                case TWO:
+                    total += 2;
+                    break;
+                case THREE:
+                    total += 3;
+                    break;
+                case FOUR:
+                    total += 4;
+                    break;
+                case FIVE:
+                    total += 5;
+                    break;
+                case SIX:
+                    total += 6;
+                    break;
+                case SEVEN:
+                    total += 7;
+                    break;
+                case EIGHT:
+                    total += 8;
+                    break;
+                case NINE:
+                    total += 9;
+                    break;
+                case TEN:
+                case JACK:
+                case QUEEN:
+                case KING:
+                    total += 10;
+                    break;
+                case ACE:
+                    aces += 1;
+                    break;
             }
         }
 
