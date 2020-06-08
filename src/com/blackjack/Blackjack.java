@@ -61,11 +61,11 @@ public class Blackjack {
             playerHand.draw(playingDeck);
 
             // Set the values and suits of the cards to test split functionality
-//            playerHand.getCard(0).setValue(Values.ACE);
-//            playerHand.getCard(0).setSuit(Suits.CLUB);
-//
-//            playerHand.getCard(1).setValue(Values.ACE);
-//            playerHand.getCard(1).setSuit(Suits.DIAMOND);
+            playerHand.getCard(0).setValue(Values.ACE);
+            playerHand.getCard(0).setSuit(Suits.CLUB);
+
+            playerHand.getCard(1).setValue(Values.ACE);
+            playerHand.getCard(1).setSuit(Suits.DIAMOND);
 
             // Dealer gets two cards
             dealerHand.draw(playingDeck);
@@ -106,65 +106,43 @@ public class Blackjack {
             while (answerSplit.equalsIgnoreCase("yes")) {
                 // Ask player if they want to hit or stand on the first hand - it will only ask them to hit or stand
                 // if they haven't busted or decided to stand
-                if (!splitHitOrStand.equalsIgnoreCase("stand") && !(split.cardsValue() > 21)) {
-                    System.out.println("Your first hand is now: ");
+                if (!splitHitOrStand.equalsIgnoreCase("stand") && !(split.cardsValue() >= 21)) {
+                    System.out.print("Your first hand is now: ");
                     System.out.println(split.toString());
                     System.out.print("Hit or stand? ");
                     splitHitOrStand = userInput.next();
-                }
 
-                // Player hits
-                if (splitHitOrStand.equalsIgnoreCase("hit")) {
-                    split.draw(playingDeck);
-                    System.out.println("You draw a: " + split.getCard(split.deckSize() - 1).toString());
-                    System.out.println("Your hand is now valued at: " + split.cardsValue());
-                    // Bust if > 21
-                    if (split.cardsValue() > 21) {
-                        System.out.println("Your hand went over 21. You busted!");
-                        playerMoney -= playerBet;
-
-                        // Play the second hand now that the first one went bust
-                        // Ask player if they want to hit or stand on the second hand
-                        System.out.println("Your second hand is now: ");
-                        System.out.println(playerHand.toString());
-                        System.out.print("Would you like to hit or stand? ");
-                        hitOrStand = userInput.next();
-
-                        // Player hits
-                        if (hitOrStand.equalsIgnoreCase("hit")) {
-                            playerHand.draw(playingDeck);
-                            System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
-                            System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
-                            // Bust if > 21
-                            if (playerHand.cardsValue() > 21) {
-                                System.out.println("Your hand went over 21. You busted!");
-                                playerMoney -= playerBet;
-                                endRound = true;
-                                break;
-                            }
-                        }
-
-                        // Player stands
-                        if (hitOrStand.equalsIgnoreCase("stand")) {
-                            break;
+                    // Player hits
+                    if (splitHitOrStand.equalsIgnoreCase("hit") && !(split.cardsValue() >= 21)) {
+                        split.draw(playingDeck);
+                        System.out.println("You draw a: " + split.getCard(split.deckSize() - 1).toString());
+                        System.out.println("Your hand is now valued at: " + split.cardsValue());
+                        // Bust if > 21
+                        if (split.cardsValue() > 21) {
+                            System.out.println("Your hand went over 21. You busted!");
+                            playerMoney -= playerBet;
                         }
                     }
                 }
 
-                // Player stands
-                if (splitHitOrStand.equalsIgnoreCase("stand")) {
-                    // Play the second hand now that the first hand is a stand
+                // Player hits second hand or stood on the first hand
+                if (splitHitOrStand.equalsIgnoreCase("stand") ||
+                        split.cardsValue() >= 21) {
+                    // Play the second hand now that the first one went bust
                     // Ask player if they want to hit or stand on the second hand
                     System.out.println("Your second hand is now: ");
                     System.out.println(playerHand.toString());
                     System.out.print("Would you like to hit or stand? ");
                     hitOrStand = userInput.next();
 
-                    // Player hits
                     if (hitOrStand.equalsIgnoreCase("hit")) {
                         playerHand.draw(playingDeck);
                         System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
+
+                        if (playerHand.cardsValue() == 21) {
+                            System.out.println("You will lose if you hit again.");
+                        }
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
                             System.out.println("Your hand went over 21. You busted!");
@@ -179,6 +157,7 @@ public class Blackjack {
                         break;
                     }
                 }
+
             }
 
 
@@ -206,6 +185,10 @@ public class Blackjack {
                         playerHand.draw(playingDeck);
                         System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
+
+                        if (playerHand.cardsValue() == 21) {
+                            System.out.println("You will lose if you hit again.");
+                        }
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
                             System.out.println("Your hand went over 21. You busted!");
@@ -233,6 +216,10 @@ public class Blackjack {
                             playerHand.draw(playingDeck);
                             System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                             System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
+
+                            if (playerHand.cardsValue() == 21) {
+                                System.out.println("You will lose if you hit again.");
+                            }
                             // Bust if > 21
                             if (playerHand.cardsValue() > 21) {
                                 System.out.println("Your hand went over 21. You busted!");
@@ -254,6 +241,10 @@ public class Blackjack {
                         playerHand.draw(playingDeck);
                         System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
+
+                        if (playerHand.cardsValue() == 21) {
+                            System.out.println("You will lose if you hit again.");
+                        }
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
                             System.out.println("Your hand went over 21. You busted!");
