@@ -19,7 +19,7 @@ public class Blackjack {
     public static String answerdd = "";
     public static String hitOrStand = "";
     public static String splitHitOrStand = "";
-    public static boolean doubledown = false;
+    public static boolean doubleDown = false;
 
     public static void main(String[] args) {
 
@@ -61,18 +61,19 @@ public class Blackjack {
             playerHand.draw(playingDeck);
 
             // Set the values and suits of the cards to test split functionality
-            playerHand.getCard(0).setValue(Values.ACE);
-            playerHand.getCard(0).setSuit(Suits.CLUB);
-
-            playerHand.getCard(1).setValue(Values.ACE);
-            playerHand.getCard(1).setSuit(Suits.DIAMOND);
+//            playerHand.getCard(0).setValue(Values.ACE);
+//            playerHand.getCard(0).setSuit(Suits.CLUB);
+//
+//            playerHand.getCard(1).setValue(Values.ACE);
+//            playerHand.getCard(1).setSuit(Suits.DIAMOND);
 
             // Dealer gets two cards
             dealerHand.draw(playingDeck);
             dealerHand.draw(playingDeck);
 
-            // reset endRound to false before each round
+            // reset endRound and doubleDown to false before each round
             endRound = false;
+            doubleDown = false;
 
 //          ------------------------------------------------------------------------------------------------
 
@@ -109,6 +110,7 @@ public class Blackjack {
                 if (!splitHitOrStand.equalsIgnoreCase("stand") && !(split.cardsValue() >= 21)) {
                     System.out.print("Your first hand is now: ");
                     System.out.println(split.toString());
+                    dontHitWarning(split);
                     System.out.print("Hit or stand? ");
                     splitHitOrStand = userInput.next();
 
@@ -117,10 +119,11 @@ public class Blackjack {
                         split.draw(playingDeck);
                         System.out.println("You draw a: " + split.getCard(split.deckSize() - 1).toString());
                         System.out.println("Your hand is now valued at: " + split.cardsValue());
+
+                        dontHitWarning(split);
                         // Bust if > 21
                         if (split.cardsValue() > 21) {
                             System.out.println("Your hand went over 21. You busted!");
-                            playerMoney -= playerBet;
                         }
                     }
                 }
@@ -140,14 +143,10 @@ public class Blackjack {
                         System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
 
-                        if (playerHand.cardsValue() == 21) {
-                            System.out.println("You will lose if you hit again.");
-                        }
+                        dontHitWarning(playerHand);
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
                             System.out.println("Your hand went over 21. You busted!");
-                            playerMoney -= playerBet;
-                            endRound = true;
                             break;
                         }
                     }
@@ -186,14 +185,10 @@ public class Blackjack {
                         System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
 
-                        if (playerHand.cardsValue() == 21) {
-                            System.out.println("You will lose if you hit again.");
-                        }
+                        dontHitWarning(playerHand);
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
                             System.out.println("Your hand went over 21. You busted!");
-                            playerMoney -= playerBet;
-                            endRound = true;
                             break;
                         }
                     }
@@ -217,14 +212,10 @@ public class Blackjack {
                             System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                             System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
 
-                            if (playerHand.cardsValue() == 21) {
-                                System.out.println("You will lose if you hit again.");
-                            }
+                            dontHitWarning(playerHand);
                             // Bust if > 21
                             if (playerHand.cardsValue() > 21) {
                                 System.out.println("Your hand went over 21. You busted!");
-                                playerMoney -= playerBet;
-                                endRound = true;
                                 break;
                             }
                         }
@@ -236,36 +227,34 @@ public class Blackjack {
 
                     } else { // player has enough money to double down
                         playerBet = playerBet * 2;
-                        doubledown = true;
+                        doubleDown = true;
                         System.out.println("Your bet is now $" + playerBet);
                         playerHand.draw(playingDeck);
                         System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
 
-                        if (playerHand.cardsValue() == 21) {
-                            System.out.println("You will lose if you hit again.");
-                        }
                         // Bust if > 21
                         if (playerHand.cardsValue() > 21) {
                             System.out.println("Your hand went over 21. You busted!");
-                            playerMoney -= playerBet;
-                            endRound = true;
                             break;
                         }
                     }
                 }
 
-                } while (!doubledown);
+                } while (!doubleDown);
 
             if (answerSplit.equalsIgnoreCase("yes")) {
-                System.out.println("Results from the first hand...");
+                System.out.println("Dealer reveals second card. It's a " + dealerHand.getCard(1).toString());
+                System.out.println("Dealer Hand: " + dealerHand.toString());
                 determineWinner(dealerHand, split);
                 endRound = false;
-                System.out.println("Results from the second hand...");
+                System.out.println("-------------------------------------------------------");
                 determineWinner(dealerHand, playerHand);
             }
 
             if (!answerSplit.equalsIgnoreCase("yes")) {
+                System.out.println("Dealer reveals second card. It's a " + dealerHand.getCard(1).toString());
+                System.out.println("Dealer Hand: " + dealerHand.toString());
                 determineWinner(dealerHand, playerHand);
             }
 
@@ -283,14 +272,18 @@ public class Blackjack {
     // method that determines winner of the hand
     public static void determineWinner(Deck dealerHand, Deck hand) {
 
+        // Adjust player balance if they busted
+        if (hand.cardsValue() > 21) {
+            System.out.println("You busted! You lose $" + playerBet + ".");
+            playerMoney -= playerBet;
+            endRound = true;
+        }
+
         // Dealer draws at 16 and below - stands at 17
         while ((dealerHand.cardsValue() < 17) && !endRound) {
             dealerHand.draw(playingDeck);
             System.out.println("Dealer Draws: " + dealerHand.getCard(dealerHand.deckSize()-1).toString());
         }
-
-        System.out.println("Dealer reveals second card. It's a " + dealerHand.getCard(1).toString());
-        System.out.println("Dealer Hand: " + dealerHand.toString());
 
         // Display Total Value for Dealer and Player
         System.out.println("Dealer's Hand value: " + dealerHand.cardsValue() + "\nPlayer's Hand value: "
@@ -323,6 +316,12 @@ public class Blackjack {
         } else if (!endRound) {
             System.out.println("You lose the hand! You lose $" + playerBet + ".");
             playerMoney -= playerBet;
+        }
+    }
+
+    public static void dontHitWarning(Deck hand) {
+        if (hand.cardsValue() == 21) {
+            System.out.println("You will lose if you hit again.");
         }
     }
 
