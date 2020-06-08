@@ -28,7 +28,7 @@ public class Deck {
     public String toString() {
         String cardListOutput = "";
         for (Card card : this.deck) {
-            cardListOutput += "\n-" + card.toString();
+            cardListOutput += " " + card.toString();
         }
         return cardListOutput;
     }
@@ -39,6 +39,15 @@ public class Deck {
 
     public void removeCard(int i){
         this.deck.remove(i);
+    }
+
+    public Boolean dontSplitThese(Deck playerHand) {
+        return playerHand.getCard(0).getValue() != Values.FOUR
+                && playerHand.getCard(0).getValue() != Values.FIVE
+                && playerHand.getCard(0).getValue() != Values.TEN
+                && playerHand.getCard(0).getValue() != Values.JACK
+                && playerHand.getCard(0).getValue() != Values.QUEEN
+                && playerHand.getCard(0).getValue() != Values.KING;
     }
 
     public void addCard(Card addCard) {
@@ -68,6 +77,12 @@ public class Deck {
         for (int i = 0; i < thisDeckSize; i++) {
             this.removeCard(0);
         }
+    }
+
+    // Move card to new hand if the player splits their cards
+    public void moveCard(Deck split) {
+        split.addCard(this.getCard(1));
+        this.removeCard(1);
     }
 
     // Return total value of cards in hand
