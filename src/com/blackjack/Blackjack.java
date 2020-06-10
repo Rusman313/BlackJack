@@ -1,5 +1,8 @@
 package com.blackjack;
 
+import com.blackjack.Deck;
+import com.blackjack.Values;
+
 import java.util.Scanner;
 
 public class Blackjack {
@@ -14,7 +17,8 @@ public class Blackjack {
     public static Deck dealerHand = new Deck();
     public static Deck split = new Deck();
 
-    // initialize variables for player's split choice, double down choice, hit or stand choice
+    // initialize variables for player's split choice, double down choice, hit or
+    // stand choice
     public static String answerSplit = "";
     public static String answerdd = "";
     public static String hitOrStand = "";
@@ -27,7 +31,7 @@ public class Blackjack {
 
     public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("Welcome to Blackjack!");
+        System.out.println("\nWelcome to Blackjack!");
 
         playingDeck.createFullDeck();
         // Don't shuffle the deck if you need to test splitting cards
@@ -40,14 +44,15 @@ public class Blackjack {
         do {
             // Take the player's bet
             Thread.sleep(800);
-            System.out.print("You have $" + playerMoney + ", how much would you like to bet? ");
+            System.out.print("\nYou have $" + playerMoney + ", how much would you like to bet? $");
             playerBet = userInput.nextInt();
-            // if statement that will not allow player to bet unless they are betting in increments of $5
+            // if statement that will not allow player to bet unless they are betting in
+            // increments of $5
             try {
                 if (playerBet % 5 != 0) {
                     throw new ArithmeticException("Sorry - you are only allowed to bet in $5 increments.");
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
                 continue;
             }
@@ -66,11 +71,11 @@ public class Blackjack {
             playerHand.draw(playingDeck);
 
             // Set the values and suits of the cards to test split functionality
-//            playerHand.getCard(0).setValue(Values.ACE);
-//            playerHand.getCard(0).setSuit(Suits.CLUB);
-//
-//            playerHand.getCard(1).setValue(Values.ACE);
-//            playerHand.getCard(1).setSuit(Suits.DIAMOND);
+            // playerHand.getCard(0).setValue(Values.ACE);
+            // playerHand.getCard(0).setSuit(Suits.CLUB);
+            //
+            // playerHand.getCard(1).setValue(Values.ACE);
+            // playerHand.getCard(1).setSuit(Suits.DIAMOND);
 
             // Dealer gets two cards
             dealerHand.draw(playingDeck);
@@ -82,18 +87,19 @@ public class Blackjack {
             answerdd = "";
             answerSplit = "";
 
-//          ------------------------------------------------------------------------------------------------
+            // ------------------------------------------------------------------------------------------------
 
             Thread.sleep(800);
-            System.out.println("Your hand: " + playerHand.toString());
+            System.out.println("\nYour hand: " + playerHand.toString());
             Thread.sleep(800);
             System.out.println("Your hand is valued at: " + playerHand.cardsValue());
 
             // Display dealer hand - one card is hidden until the player busts or stands
             Thread.sleep(800);
-            System.out.println("Dealer Hand: " + dealerHand.getCard(0).toString() + " and [Hidden]");
+            System.out.println("\nDealer Hand: " + dealerHand.getCard(0).toString() + " and [Hidden]");
 
-            // if statement that will create a new hand if player wants to split cards with same values
+            // if statement that will create a new hand if player wants to split cards with
+            // same values
             // NEVER split Tens (Jacks, Queens, Kings), Fours or Fives
             if (playerHand.getCard(0).getValue() == playerHand.getCard(1).getValue()
                     && playerHand.dontSplitThese(playerHand)) {
@@ -102,8 +108,8 @@ public class Blackjack {
                 answerSplit = userInput.next();
 
                 // Tell player they should split if they have Eights or Aces
-                if (!answerSplit.equalsIgnoreCase("yes") && playerHand.getCard(0).getValue()
-                        == Values.ACE || playerHand.getCard(0).getValue() == Values.EIGHT) {
+                if (!answerSplit.equalsIgnoreCase("yes") && playerHand.getCard(0).getValue() == Values.ACE
+                        || playerHand.getCard(0).getValue() == Values.EIGHT) {
                     Thread.sleep(800);
                     System.out.println("You should always split Eights or Aces. Would you like to split your cards?");
                     answerSplit = userInput.next();
@@ -116,7 +122,8 @@ public class Blackjack {
             }
 
             while (answerSplit.equalsIgnoreCase("yes")) {
-                // Ask player if they want to hit or stand on the first hand - it will only ask them to hit or stand
+                // Ask player if they want to hit or stand on the first hand - it will only ask
+                // them to hit or stand
                 // if they haven't busted or decided to stand
                 if (!splitHitOrStand.equalsIgnoreCase("stand") && !(split.cardsValue() >= 21)) {
                     Thread.sleep(800);
@@ -129,11 +136,11 @@ public class Blackjack {
                     if (splitHitOrStand.equalsIgnoreCase("hit") && !(split.cardsValue() >= 21)) {
                         split.draw(playingDeck);
                         Thread.sleep(800);
-                        System.out.println("You draw a: " + split.getCard(split.deckSize() - 1).toString());
+                        System.out.println("\nYou draw a: " + split.getCard(split.deckSize() - 1).toString());
                         Thread.sleep(800);
                         System.out.println("Your hand is now valued at: " + split.cardsValue());
 
-                        dontHitWarning(split);
+                        playerHas21(split);
                         // Bust if > 21
                         Thread.sleep(800);
                         if (split.cardsValue() > 21) {
@@ -143,8 +150,7 @@ public class Blackjack {
                 }
 
                 // Player hits second hand or stood on the first hand
-                if (splitHitOrStand.equalsIgnoreCase("stand") ||
-                        split.cardsValue() >= 21) {
+                if (splitHitOrStand.equalsIgnoreCase("stand") || split.cardsValue() >= 21) {
                     // Play the second hand now that the first one went bust
                     // Ask player if they want to hit or stand on the second hand
                     Thread.sleep(800);
@@ -156,11 +162,11 @@ public class Blackjack {
                     if (hitOrStand.equalsIgnoreCase("hit")) {
                         playerHand.draw(playingDeck);
                         Thread.sleep(800);
-                        System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
+                        System.out.println("\nYou draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         Thread.sleep(800);
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
 
-                        dontHitWarning(playerHand);
+                        playerHas21(playerHand);
                         // Bust if > 21
                         Thread.sleep(800);
                         if (playerHand.cardsValue() > 21) {
@@ -177,7 +183,6 @@ public class Blackjack {
 
             }
 
-
             do {
                 // don't check any of these conditions if player decided to split
                 if (answerSplit.equalsIgnoreCase("yes")) {
@@ -185,8 +190,8 @@ public class Blackjack {
                 }
 
                 // player can only double down if their hand total is 9, 10 or 11
-                if (playerHand.cardsValue() == 9 || playerHand.cardsValue() == 10 || playerHand.cardsValue() == 11
-                        && !answerSplit.equalsIgnoreCase("yes")) {
+                if (playerHand.cardsValue() == 9 || playerHand.cardsValue() == 10
+                        || playerHand.cardsValue() == 11 && !answerSplit.equalsIgnoreCase("yes")) {
                     Thread.sleep(800);
                     System.out.print("Do you want to Double Down? ");
                     answerdd = userInput.next();
@@ -203,11 +208,11 @@ public class Blackjack {
                     if (hitOrStand.equalsIgnoreCase("hit")) {
                         playerHand.draw(playingDeck);
                         Thread.sleep(800);
-                        System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
+                        System.out.println("\nYou draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         Thread.sleep(800);
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
 
-                        dontHitWarning(playerHand);
+                        playerHas21(playerHand);
                         // Bust if > 21
                         Thread.sleep(800);
                         if (playerHand.cardsValue() > 21) {
@@ -226,19 +231,20 @@ public class Blackjack {
                 if (answerdd.equalsIgnoreCase("yes")) {
                     if (playerBet * 2 > playerMoney) {
                         Thread.sleep(800);
-                        System.out.println("You do not have enough money to double down. However, you can continue " +
-                                "to play your hand.");
+                        System.out.println("You do not have enough money to double down. However, you can continue "
+                                + "to play your hand.");
                         // Ask player if they want to hit or stand
 
                         // player can't double down but they still have the option to hit or stand
                         if (hitOrStand.charAt(0) == 'h' || hitOrStand.charAt(0) == 'H') {
                             playerHand.draw(playingDeck);
                             Thread.sleep(800);
-                            System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
+                            System.out.println(
+                                    "\nYou draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                             Thread.sleep(800);
                             System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
 
-                            dontHitWarning(playerHand);
+                            playerHas21(playerHand);
                             // Bust if > 21
                             Thread.sleep(800);
                             if (playerHand.cardsValue() > 21) {
@@ -258,7 +264,7 @@ public class Blackjack {
                         System.out.println("Your bet is now $" + playerBet);
                         playerHand.draw(playingDeck);
                         Thread.sleep(800);
-                        System.out.println("You draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
+                        System.out.println("\nYou draw a: " + playerHand.getCard(playerHand.deckSize() - 1).toString());
                         Thread.sleep(800);
                         System.out.println("Your hand is now valued at: " + playerHand.cardsValue());
 
@@ -271,11 +277,11 @@ public class Blackjack {
                     }
                 }
 
-                } while (!doubleDown);
+            } while (!doubleDown);
 
             if (answerSplit.equalsIgnoreCase("yes")) {
                 Thread.sleep(800);
-                System.out.println("Dealer reveals second card. It's a " + dealerHand.getCard(1).toString());
+                System.out.println("\nDealer reveals second card. It's a " + dealerHand.getCard(1).toString());
                 Thread.sleep(800);
                 System.out.println("Dealer Hand: " + dealerHand.toString());
                 Thread.sleep(800);
@@ -288,7 +294,7 @@ public class Blackjack {
 
             if (!answerSplit.equalsIgnoreCase("yes")) {
                 Thread.sleep(800);
-                System.out.println("Dealer reveals second card. It's a " + dealerHand.getCard(1).toString());
+                System.out.println("\nDealer reveals second card. It's a " + dealerHand.getCard(1).toString());
                 Thread.sleep(800);
                 System.out.println("Dealer Hand: " + dealerHand.toString());
                 Thread.sleep(800);
@@ -300,11 +306,12 @@ public class Blackjack {
             dealerHand.moveAllToDeck(playingDeck);
 
             Thread.sleep(800);
-            System.out.println("End of hand");
+            System.out.println("\nEnd of hand");
 
         } while (playerMoney > 0);
 
         System.out.println(ANSI_RED + "Game Over... You are out of money." + ANSI_RESET);
+        userInput.close();
     }
 
     // method that determines winner of the hand
@@ -313,7 +320,7 @@ public class Blackjack {
         // Adjust player balance if they busted
         if (hand.cardsValue() > 21) {
             Thread.sleep(800);
-            System.out.println(ANSI_RED + "You busted! You lose $" + playerBet + "." + ANSI_RESET);
+            System.out.println(ANSI_RED + "\nYou busted! You lose $" + playerBet + "." + ANSI_RESET);
             playerMoney -= playerBet;
             endRound = true;
         }
@@ -322,12 +329,12 @@ public class Blackjack {
         while ((dealerHand.cardsValue() < 17) && !endRound) {
             dealerHand.draw(playingDeck);
             Thread.sleep(800);
-            System.out.println("Dealer Draws: " + dealerHand.getCard(dealerHand.deckSize()-1).toString());
+            System.out.println("Dealer Draws: " + dealerHand.getCard(dealerHand.deckSize() - 1).toString());
         }
 
         Thread.sleep(800);
         // Display Total Value for Dealer and Player
-        System.out.println("Dealer's Hand value: " + dealerHand.cardsValue() + ". Player's Hand value: "
+        System.out.println("\nDealer's Hand value: " + dealerHand.cardsValue() + ". Player's Hand value: "
                 + hand.cardsValue() + ".");
 
         // Dealer busts if their cards are more than 21
@@ -365,7 +372,8 @@ public class Blackjack {
         }
     }
 
-    public static void dontHitWarning(Deck hand) throws InterruptedException {
+    // Player has 21. Method will tell them they have 21 and they will not be able to hit
+    public static void playerHas21(Deck hand) throws InterruptedException {
         if (hand.cardsValue() == 21) {
             hitOrStand = "stand";
             splitHitOrStand = "stand";
